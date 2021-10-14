@@ -1,0 +1,7 @@
+{ Filter = { Bundles = 
+		( 
+			"com.apple.Photos",
+			"com.apple.springboard"
+		); 
+	}; 
+}

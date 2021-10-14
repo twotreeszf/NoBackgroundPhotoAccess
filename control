@@ -1,0 +1,9 @@
+Package: com.twotrees.NoBackgroundPhotoAccess
+Name: NoBackgroundPhotoAccess
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Block background access to photos
+Maintainer: twotrees
+Author: twotrees.zf@gmail.com
+Section: Tweaks
