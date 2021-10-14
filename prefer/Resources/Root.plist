@@ -8,7 +8,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>总开关</string>
+			<string>除了系统自带App，其他App在后台访问照片将被阻止，可能导致App在后台作恶时直接挂掉</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -20,7 +20,7 @@
 			<key>key</key>
 			<string>Enabled</string>
 			<key>label</key>
-			<string>启用</string>
+			<string>总开关</string>
 		</dict>		
 		<dict>
 			<key>label</key>
