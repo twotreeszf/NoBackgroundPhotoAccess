@@ -4,8 +4,8 @@ DEBUG = 0
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = NoBackgroundPhotoAccess
-AutoPassXI_CFLAGS = -fobjc-arc -w
-AutoPassXI_FILES = Tweak.xm
+NoBackgroundPhotoAccess_CFLAGS = -fobjc-arc -w
+NoBackgroundPhotoAccess_FILES = Tweak.xm
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

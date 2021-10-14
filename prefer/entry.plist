@@ -5,17 +5,17 @@
 	<key>entry</key>
 	<dict>
 		<key>bundle</key>
-		<string>NoBackgroundPhotoAccess</string>
+		<string>NoBackgroundPhotoAccessPrefer</string>
 		<key>cell</key>
 		<string>PSLinkCell</string>
 		<key>detail</key>
 		<string>TTRootListController</string>
 		<key>icon</key>
-		<string>icon.png</string>
+		<string>nobackgroundphotoaccessprefer.png</string>
 		<key>isController</key>
 		<true/>
 		<key>label</key>
-		<string>NoBackgroundPhotoAccess</string>
+		<string>禁止 App 在后台访问照片</string>
 	</dict>
 </dict>
 </plist>

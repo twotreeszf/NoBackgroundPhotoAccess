@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AssetsLibrary/ALAsset.h>
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void _debugMsg(NSString* msg) {
-	NSLog(@"NoBackgroundPhotoAccess: %@", msg);
+	NSLog(@"NoBackgroundPhotoAccess from %@-%d : %@", [NSProcessInfo processInfo].processName, [NSProcessInfo processInfo].processIdentifier, msg);
 }
 
 NSDictionary* _configDic() {
@@ -19,23 +20,82 @@ NSDictionary* _configDic() {
 }
 
 BOOL _enabled() {
-    NSDictionary *prefs = _cnfigDic();
+    NSDictionary *prefs = _configDic();
     BOOL enabled = [prefs[@"Enabled"] boolValue];
+    NSLog(@"tweak enabled: %d", enabled);
     return enabled;
+}
+
+BOOL _shouldBlockAccess() {
+    if (_enabled()) {  
+        if ([NSProcessInfo processInfo].arguments.count) {
+            NSString* exePath = [NSProcessInfo processInfo].arguments[0];
+            if ([exePath hasPrefix:@"/var/containers/Bundle/Application"]) {
+                _debugMsg(@"is user app");
+                if (UIApplicationStateBackground == [UIApplication sharedApplication].applicationState) {
+                    return YES;
+                }                
+            }
+        }                    
+    }
+
+
+    return NO;
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 %ctor {
-	_dbugMsg([NSString stringWithFormat:@"launched pid: %d", [NSProcessInfo processInfo].processIdentifier]);
+	_debugMsg(@"launched");
 }
 
 %hook PHImageManager
 
-+ (PHImageManager *)defaultManager {
-    if (UIApplicationStateBackground == [UIApplication sharedApplication].applicationState)
+- (instancetype)init {
+    _debugMsg(@"request PHImageManager");
+
+    
+    if (_shouldBlockAccess()) {
+        _debugMsg(@"block access PHImageManager");
         return nil;
-    else
+    } else {
+        _debugMsg(@"enable access PHImageManager");
         return %orig;
+    }
 }
+
+%end
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+%hook ALAsset
+
+- (ALAssetRepresentation *)defaultRepresentation {
+    _debugMsg(@"request ALAssetRepresentation");
+
+    
+    if (_shouldBlockAccess()) {
+        _debugMsg(@"block access ALAssetRepresentation");
+        return nil;
+    } else {
+        _debugMsg(@"enable access ALAssetRepresentation");
+        return %orig;
+    }
+}
+
+
+- (ALAssetRepresentation *)representationForUTI:(NSString *)representationUTI {
+    _debugMsg(@"request representationForUTI");
+
+    
+    if (_shouldBlockAccess()) {
+        _debugMsg(@"block access representationForUTI");
+        return nil;
+    } else {
+        _debugMsg(@"enable access representationForUTI");
+        return %orig(representationUTI);
+    }
+}
+
 %end
