@@ -50,7 +50,7 @@ BOOL _sendAlertNotification() {
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.badge = [NSNumber numberWithInt:1];
-    content.title = @"NoBackgroundPhotoAccess";
+    content.title = @"💣 NoBackgroundPhotoAccess 💣";
     content.body = @"Found background photo fetch behavior, blocked!";
     content.sound = [UNNotificationSound defaultSound];
     UNTimeIntervalNotificationTrigger *trigger =  [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO];
