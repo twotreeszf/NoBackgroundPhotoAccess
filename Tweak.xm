@@ -33,6 +33,8 @@ BOOL _shouldBlockAccess() {
             NSString* exePath = [NSProcessInfo processInfo].arguments[0];
             if ([exePath hasPrefix:@"/var/containers/Bundle/Application"]) {
                 _debugMsg(@"is user app");
+                //UIApplicationStateBackground
+                // UIApplicationStateActive
                 if (UIApplicationStateBackground == [UIApplication sharedApplication].applicationState) {
                     return YES;
                 }                
@@ -51,7 +53,7 @@ BOOL _sendAlertNotification() {
     content.title = @"NoBackgroundPhotoAccess";
     content.body = @"Found background photo fetch behavior, blocked!";
     content.sound = [UNNotificationSound defaultSound];
-    UNTimeIntervalNotificationTrigger *trigger =  [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:0 repeats:NO];
+    UNTimeIntervalNotificationTrigger *trigger =  [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO];
     UNNotificationRequest *notificationRequest = [UNNotificationRequest requestWithIdentifier:@"NoBackgroundPhotoAccess" content:content trigger:trigger];
     [center addNotificationRequest:notificationRequest withCompletionHandler:nil];
 }
