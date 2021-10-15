@@ -104,7 +104,7 @@ resultHandler:(void (^)(NSData * imageData, NSString * dataUTI, CGImagePropertyO
 */
 
 - (instancetype)init {
-    BOOL result = _processBlock([NSString stringWithUTF8String:__PRETTY_FUNCTION__]);
+    BOOL result = _processBlock(@"PHImageManager-init");
     if (result)
         return nil;
     else
@@ -119,7 +119,7 @@ resultHandler:(void (^)(NSData * imageData, NSString * dataUTI, CGImagePropertyO
 %hook ALAsset
 
 - (ALAssetRepresentation *)defaultRepresentation {
-    BOOL result = _processBlock([NSString stringWithUTF8String:__PRETTY_FUNCTION__]);
+    BOOL result = _processBlock(@"ALAsset-defaultRepresentation");
     if (result)
         return nil;
     else
@@ -128,7 +128,7 @@ resultHandler:(void (^)(NSData * imageData, NSString * dataUTI, CGImagePropertyO
 
 
 - (ALAssetRepresentation *)representationForUTI:(NSString *)representationUTI {
-    BOOL result = _processBlock([NSString stringWithUTF8String:__PRETTY_FUNCTION__]);
+    BOOL result = _processBlock(@"ALAsset-representationForUTI:");
     if (result)
         return nil;
     else
