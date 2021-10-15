@@ -24,7 +24,7 @@ NSDictionary* _configDic() {
 BOOL _enabled() {
     NSDictionary *prefs = _configDic();
     BOOL enabled = [prefs[@"Enabled"] boolValue];
-    NSLog(@"tweak enabled: %d", enabled);
+    _debugMsg([NSString stringWithFormat:@"tweak enabled: %d", enabled]);
     return enabled;
 }
 
@@ -36,10 +36,12 @@ BOOL _shouldBlockAccess() {
                 _debugMsg(@"is user app");
                 //UIApplicationStateBackground
                 // UIApplicationStateActive
-                if (UIApplicationStateBackground == [UIApplication sharedApplication].applicationState) {
+                if (UIApplicationStateBackground == [%c(UIApplication) sharedApplication].applicationState) {
                     return YES;
-                }                
+                }  
             }
+            else
+                _debugMsg(@"is system app");                
         }                    
     }
 
@@ -60,7 +62,7 @@ BOOL _sendAlertNotification() {
 }
 
 BOOL _processBlock(NSString* requestName) {
-    _debugMsg([NSString stringWithFormat:@"request access $@", requestName]);
+    _debugMsg([NSString stringWithFormat:@"request access %@", requestName]);
 
     
     if (_shouldBlockAccess()) {
@@ -81,40 +83,84 @@ BOOL _processBlock(NSString* requestName) {
 
 %hook PHImageManager
 
-/*
 - (PHImageRequestID)requestImageForAsset:(PHAsset *)asset 
 targetSize:(CGSize)targetSize 
 contentMode:(PHImageContentMode)contentMode 
 options:(PHImageRequestOptions *)options 
 resultHandler:(void (^)(UIImage * result, NSDictionary * info))resultHandler {
-
+    BOOL result = _processBlock(@"PHImageManager-requestImageForAsset:targetSize:contentMode:options:resultHandler:");
+    if (result)
+        return PHInvalidImageRequestID;
+    else
+        return %orig(asset, targetSize, contentMode, options, resultHandler);
 }
 
 - (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset 
 options:(PHImageRequestOptions *)options 
 resultHandler:(void (^)(NSData * imageData, NSString * dataUTI, UIImageOrientation orientation, NSDictionary * info))resultHandler {
-
+    BOOL result = _processBlock(@"PHImageManager-requestImageForAsset:options:resultHandler:");
+    if (result)
+        return PHInvalidImageRequestID;
+    else
+        return %orig(asset, options, resultHandler);
 }
 
 - (PHImageRequestID)requestImageDataAndOrientationForAsset:(PHAsset *)asset 
 options:(PHImageRequestOptions *)options 
 resultHandler:(void (^)(NSData * imageData, NSString * dataUTI, CGImagePropertyOrientation orientation, NSDictionary * info))resultHandler {
-
-}
-*/
-
-- (instancetype)init {
-    BOOL result = _processBlock(@"PHImageManager-init");
+    BOOL result = _processBlock(@"PHImageManager-requestImageDataAndOrientationForAsset:options:resultHandler:");
     if (result)
-        return nil;
+        return PHInvalidImageRequestID;
     else
-        return %orig;
+        return %orig(asset, options, resultHandler);
+}
+
+- (PHImageRequestID)requestLivePhotoForAsset:(PHAsset *)asset 
+targetSize:(CGSize)targetSize 
+contentMode:(PHImageContentMode)contentMode 
+options:(PHLivePhotoRequestOptions *)options 
+resultHandler:(void (^)(PHLivePhoto * livePhoto, NSDictionary * info))resultHandler {
+    BOOL result = _processBlock(@"PHImageManager-rrequestLivePhotoForAsset:targetSize:contentMode:options:resultHandler:");
+    if (result)
+        return PHInvalidImageRequestID;
+    else
+        return %orig(asset, targetSize, contentMode, options, resultHandler);
+}
+
+- (PHImageRequestID)requestPlayerItemForVideo:(PHAsset *)asset 
+options:(PHVideoRequestOptions *)options 
+resultHandler:(void (^)(AVPlayerItem * playerItem, NSDictionary * info))resultHandler {
+    BOOL result = _processBlock(@"PHImageManager-requestPlayerItemForVideo:options:resultHandler:");
+    if (result)
+        return PHInvalidImageRequestID;
+    else
+        return %orig(asset, options, resultHandler);
+}
+
+- (PHImageRequestID)requestExportSessionForVideo:(PHAsset *)asset 
+options:(PHVideoRequestOptions *)options 
+exportPreset:(NSString *)exportPreset 
+resultHandler:(void (^)(AVAssetExportSession * exportSession, NSDictionary * info))resultHandler {
+    BOOL result = _processBlock(@"PHImageManager-requestExportSessionForVideo:options:exportPreset:resultHandler:");
+    if (result)
+        return PHInvalidImageRequestID;
+    else
+        return %orig(asset, options, exportPreset, resultHandler);
+}
+
+- (PHImageRequestID)requestAVAssetForVideo:(PHAsset *)asset 
+options:(PHVideoRequestOptions *)options 
+resultHandler:(void (^)(AVAsset * asset, AVAudioMix * audioMix, NSDictionary * info))resultHandler {
+    BOOL result = _processBlock(@"PHImageManager-requestAVAssetForVideo:options:resultHandler:");
+    if (result)
+        return PHInvalidImageRequestID;
+    else
+        return %orig(asset, options, resultHandler);
 }
 
 %end
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 
 %hook ALAsset
 

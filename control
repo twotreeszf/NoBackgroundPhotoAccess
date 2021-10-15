@@ -1,7 +1,7 @@
 Package: com.twotrees.nobackgroundphotoaccess
 Name: NoBackgroundPhotoAccess
 Depends: mobilesubstrate
-Version: 1.1.0
+Version: 1.1.1
 Architecture: iphoneos-arm
 Description: Prevent  apps accessing photos in the background except system apps, feel free to take it, and I lose if you steal a photo backstage.
 Maintainer: twotrees
