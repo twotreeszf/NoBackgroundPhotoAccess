@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AssetsLibrary/ALAsset.h>
 #import <UserNotifications/UserNotifications.h>
+#import <AssetsLibrary/ALAsset.h>
+#import <Photos/Photos.h>
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -58,6 +59,20 @@ BOOL _sendAlertNotification() {
     [center addNotificationRequest:notificationRequest withCompletionHandler:nil];
 }
 
+BOOL _processBlock(NSString* requestName) {
+    _debugMsg([NSString stringWithFormat:@"request access $@", requestName]);
+
+    
+    if (_shouldBlockAccess()) {
+        _debugMsg(@"block access");
+        _sendAlertNotification();
+        return YES;
+    } else {
+        _debugMsg(@"enable access");
+        return NO;
+    }
+}
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 %ctor {
@@ -66,18 +81,34 @@ BOOL _sendAlertNotification() {
 
 %hook PHImageManager
 
-- (instancetype)init {
-    _debugMsg(@"request PHImageManager");
+/*
+- (PHImageRequestID)requestImageForAsset:(PHAsset *)asset 
+targetSize:(CGSize)targetSize 
+contentMode:(PHImageContentMode)contentMode 
+options:(PHImageRequestOptions *)options 
+resultHandler:(void (^)(UIImage * result, NSDictionary * info))resultHandler {
 
-    
-    if (_shouldBlockAccess()) {
-        _debugMsg(@"block access PHImageManager");
-        _sendAlertNotification();
+}
+
+- (PHImageRequestID)requestImageDataForAsset:(PHAsset *)asset 
+options:(PHImageRequestOptions *)options 
+resultHandler:(void (^)(NSData * imageData, NSString * dataUTI, UIImageOrientation orientation, NSDictionary * info))resultHandler {
+
+}
+
+- (PHImageRequestID)requestImageDataAndOrientationForAsset:(PHAsset *)asset 
+options:(PHImageRequestOptions *)options 
+resultHandler:(void (^)(NSData * imageData, NSString * dataUTI, CGImagePropertyOrientation orientation, NSDictionary * info))resultHandler {
+
+}
+*/
+
+- (instancetype)init {
+    BOOL result = _processBlock([NSString stringWithUTF8String:__PRETTY_FUNCTION__]);
+    if (result)
         return nil;
-    } else {
-        _debugMsg(@"enable access PHImageManager");
+    else
         return %orig;
-    }
 }
 
 %end
@@ -88,32 +119,20 @@ BOOL _sendAlertNotification() {
 %hook ALAsset
 
 - (ALAssetRepresentation *)defaultRepresentation {
-    _debugMsg(@"request ALAssetRepresentation");
-
-    
-    if (_shouldBlockAccess()) {
-        _debugMsg(@"block access ALAssetRepresentation");
-        _sendAlertNotification();
+    BOOL result = _processBlock([NSString stringWithUTF8String:__PRETTY_FUNCTION__]);
+    if (result)
         return nil;
-    } else {
-        _debugMsg(@"enable access ALAssetRepresentation");
+    else
         return %orig;
-    }
 }
 
 
 - (ALAssetRepresentation *)representationForUTI:(NSString *)representationUTI {
-    _debugMsg(@"request representationForUTI");
-
-    
-    if (_shouldBlockAccess()) {
-        _debugMsg(@"block access representationForUTI");
-        _sendAlertNotification();
+    BOOL result = _processBlock([NSString stringWithUTF8String:__PRETTY_FUNCTION__]);
+    if (result)
         return nil;
-    } else {
-        _debugMsg(@"enable access representationForUTI");
+    else
         return %orig(representationUTI);
-    }
 }
 
 %end
