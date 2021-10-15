@@ -15,7 +15,7 @@
 		<key>isController</key>
 		<true/>
 		<key>label</key>
-		<string>禁止 App 在后台访问照片</string>
+		<string>NoBackgroundPhotoAccess</string>
 	</dict>
 </dict>
 </plist>

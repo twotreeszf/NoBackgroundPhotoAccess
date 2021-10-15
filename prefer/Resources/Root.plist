@@ -7,8 +7,8 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>除了系统自带App，其他App在后台访问照片将被阻止，可能导致App在后台作恶时直接挂掉</string>
+			<key>footerText</key>
+			<string>Prevent  apps accessing photos in the background except system apps, feel free to take it, and I lose if you steal a photo backstage.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -20,7 +20,7 @@
 			<key>key</key>
 			<string>Enabled</string>
 			<key>label</key>
-			<string>总开关</string>
+			<string>Enable</string>
 		</dict>		
 		<dict>
 			<key>label</key>
@@ -32,6 +32,6 @@
 		</dict>
 	</array>
 	<key>title</key>
-	<string>禁止 App 在后台访问照片</string>	
+	<string>NoBackgroundPhotoAccess</string>	
 </dict>
 </plist>

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AssetsLibrary/ALAsset.h>
+#import <UserNotifications/UserNotifications.h>
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -43,6 +44,18 @@ BOOL _shouldBlockAccess() {
     return NO;
 }
 
+BOOL _sendAlertNotification() {
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
+    content.badge = [NSNumber numberWithInt:1];
+    content.title = @"NoBackgroundPhotoAccess";
+    content.body = @"Found background photo fetch behavior, blocked!";
+    content.sound = [UNNotificationSound defaultSound];
+    UNTimeIntervalNotificationTrigger *trigger =  [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:0 repeats:NO];
+    UNNotificationRequest *notificationRequest = [UNNotificationRequest requestWithIdentifier:@"NoBackgroundPhotoAccess" content:content trigger:trigger];
+    [center addNotificationRequest:notificationRequest withCompletionHandler:nil];
+}
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 %ctor {
@@ -57,6 +70,7 @@ BOOL _shouldBlockAccess() {
     
     if (_shouldBlockAccess()) {
         _debugMsg(@"block access PHImageManager");
+        _sendAlertNotification();
         return nil;
     } else {
         _debugMsg(@"enable access PHImageManager");
@@ -77,6 +91,7 @@ BOOL _shouldBlockAccess() {
     
     if (_shouldBlockAccess()) {
         _debugMsg(@"block access ALAssetRepresentation");
+        _sendAlertNotification();
         return nil;
     } else {
         _debugMsg(@"enable access ALAssetRepresentation");
@@ -91,6 +106,7 @@ BOOL _shouldBlockAccess() {
     
     if (_shouldBlockAccess()) {
         _debugMsg(@"block access representationForUTI");
+        _sendAlertNotification();
         return nil;
     } else {
         _debugMsg(@"enable access representationForUTI");
